@@ -1,0 +1,193 @@
+<nz-breadcrumb style="margin: 20px">
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/welcome']">书库</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>图书位置明细</nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div style="background: #ECECEC;padding:30px;">
+    <nz-card nzTitle="图书位置信息管理" >
+        
+            <form nz-form [formGroup]="validateForm"  (ngSubmit)="submitForm()">
+              <div nz-row [nzGutter]="[16, ]">
+            <div nz-col class="gutter-row" [nzSpan]="6">
+              <nz-form-item>
+                <nz-form-label nzFor="name">书架名称</nz-form-label>
+                <nz-form-control>
+                  <input
+                    nz-input
+                    placeholder="请输入书架名称"
+                    formControlName="name"
+                    id="name"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="6">
+              <nz-form-item>
+                <nz-form-label nzFor="shelfCode">书架编号</nz-form-label>
+                <nz-form-control>
+                  <input
+                    nz-input
+                    placeholder="请输入书籍分类编号"
+                    formControlName="shelfCode"
+                    id="shelfCode"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="6">
+                <nz-form-item>
+                  <nz-form-label nzFor="cellCode">书架格子编号</nz-form-label>
+                  <nz-form-control>
+                    <input
+                      nz-input
+                      placeholder="请输入书架格子编号"
+                      formControlName="cellCode"
+                      id="cellCode"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            <div nz-col class="gutter-row" [nzSpan]="2"> <nz-form-item>
+              <nz-form-control >
+                <button nz-button nzType="primary" [disabled]="!validateForm.valid">提交上传</button>
+              </nz-form-control>
+            </nz-form-item>
+            </div>
+          </div>
+          </form>
+        
+        
+          
+    </nz-card>
+  </div>
+
+
+  <nz-table #basicTable [nzData]="displayData"  
+  [nzScroll]="{ y: '330px' }" 
+  [nzFrontPagination]="false" 
+  [nzTotal]="total" 
+  [(nzPageIndex)]="curpage" 
+  [nzPageSize]="pagesize" 
+  [nzShowTotal]="totalTemplate" 
+  (nzPageIndexChange)="get()" 
+  (nzPageSizeChange)="get()" 
+  nzShowPagination="true" 
+  nzShowSizeChanger="true" 
+  [nzPageSizeOptions]="[5, 10, 20, 30, 50, 100]">
+    <thead>
+      <tr>
+        <th>序号
+          
+        </th>
+        <th>书架名称
+          <nz-filter-trigger [(nzVisible)]="tvisible" [nzActive]="searchValue.length > 0" [nzDropdownMenu]="menu">
+          <i nz-icon nzType="search"></i>
+        </nz-filter-trigger>
+      </th>
+        <th>书架编号</th>
+        <th>位置编号</th>
+        <th>可执行操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data;let i = index">
+        <td>{{ data.id }}</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.shelfCode }}</td>
+        <td>{{ data.cellCode }}</td>
+        <td>
+          
+          <button nz-button nzType="primary"
+      nz-popconfirm
+      nzPopconfirmTitle="你确定删除这个书籍分类?"
+      nzPopconfirmPlacement="bottom"
+      (nzOnConfirm)="del(data.id)"
+      (nzOnCancel)="cancel()"
+    >
+      删除
+    </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button nz-button nzType="primary" (click)="open(data.id)">修改</button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #totalTemplate let-total>共{{ total }}项 </ng-template>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">Search</button>
+        <button nz-button nzSize="small" (click)="reset()">Reset</button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+
+  <nz-drawer
+  [nzBodyStyle]="{ overflow: 'auto' }"
+  [nzMaskClosable]="false"
+  [nzWidth]="520"
+  [nzVisible]="visible"
+  nzTitle="修改"
+  [nzFooter]="footerTpl"
+  (nzOnClose)="close()"
+>
+  <form nz-form *nzDrawerContent [formGroup]="changeableForm"  (ngSubmit)="changeForm()">
+    <div nz-row [nzGutter]="8">
+      <div nz-col nzSpan="22">
+        <nz-form-item>
+          <nz-form-label>书架名称</nz-form-label>
+          <nz-form-control>
+            <input nz-input placeholder="请输入新的书籍分类名称" formControlName="name"
+            id="name"/>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="8">
+      <div nz-col nzSpan="22">
+        <nz-form-item>
+          <nz-form-label>书架编号</nz-form-label>
+          <nz-form-control>
+            <input nz-input placeholder="请输入新的书籍分类编号" formControlName="shelfCode"
+            id="shelfCode"/>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="8">
+      <div nz-col nzSpan="22">
+        <nz-form-item>
+          <nz-form-label>书架格子编号</nz-form-label>
+          <nz-form-control>
+            <input nz-input placeholder="请输入新的书籍分类编号" formControlName="cellCode"
+            id="cellCode"/>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+      <div nz-row [nzGutter]="6">
+        <div nz-col nzSpan="4">
+  <button nz-button  (click)="close()">取消</button>
+        </div>
+      
+      
+        <div nz-col nzSpan="4">
+  <nz-form-item>
+    <nz-form-control >
+      <button nz-button nzType="primary" [disabled]="!changeableForm.valid">提交上传</button>
+    </nz-form-control>
+  </nz-form-item>
+    </div>
+  </div>
+  </form>
+
+  <ng-template #footerTpl>
+    <div style="float: right">
+  
+    </div>
+  </ng-template>
+</nz-drawer>

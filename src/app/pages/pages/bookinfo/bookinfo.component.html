@@ -1,0 +1,350 @@
+<nz-breadcrumb style="margin: 20px">
+  <nz-breadcrumb-item>
+    <a [routerLink]="['/welcome']">书库</a>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>书籍信息总览</nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<div style="background: #ECECEC;padding:30px;">
+  
+  
+      <nz-card nzTitle="书籍信息管理" style="height:260px ;">
+        <form nz-form [formGroup]="searchForm" (ngSubmit)="searchsubmit()">
+        
+        <div nz-row [nzGutter]="6">
+          <div nz-col class="gutter-row" [nzSpan]="6">
+            <nz-form-item>
+              <nz-form-label nzFor="name" [nzSpan]="6">书籍名称</nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                <input
+                  nz-input
+                  placeholder="请输入书籍名称"
+                  formControlName="name"
+                  id="name"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="6">
+            <nz-form-item>
+              <nz-form-label nzFor="author" [nzSpan]="6">作者姓名</nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                <input
+                  nz-input
+                  placeholder="请输入作者姓名"
+                  formControlName="author"
+                  id="author"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="6">
+            <nz-form-item>
+              <nz-form-label nzFor="translator" [nzSpan]="6">译者姓名</nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                <input
+                  nz-input
+                  placeholder="请输入译者姓名"
+                  formControlName="translator"
+                  id="translator"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="6">
+            <nz-form-item>
+              <nz-form-label nzFor="press" [nzSpan]="6">出版日期</nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                <input
+                  nz-input
+                  placeholder="请输入出版日期"
+                  formControlName="press"
+                  id="press"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="6"><nz-form-item>
+            <nz-form-label nzFor="classification" [nzSpan]="6">书籍分类</nz-form-label>
+            <nz-form-control [nzSpan]="16">
+              <input
+                nz-input
+                placeholder="请输入书籍分类"
+                formControlName="classification"
+                id="classification"
+              />
+            </nz-form-control>
+          </nz-form-item>
+          </div>
+          <div nz-col class="gutter-row" [nzSpan]="6">
+            <nz-form-control [nzSpan]="8" [nzPush]="2">
+              <button nz-button nzType="primary" >筛选/搜索</button>
+            </nz-form-control>
+            </div>
+        </div>
+    </form>
+    <nz-divider style="margin:12px"></nz-divider>
+    <div nz-row [nzGutter]="6">
+  <div nz-col class="gutter-row" [nzSpan]="23" >
+    <nz-form-label nzFor="sosuo" style="float: left;" >模糊搜索</nz-form-label>
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" style="width: 400px;float: left;">
+      <input type="text" nz-input placeholder="请输入搜索" [(ngModel)]="searchValuee" id='sosuo'/>
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch (click)="getsearch()"><span nz-icon nzType="search"></span></button>
+    </ng-template> 
+    <button (click)="get()" style="height: 32px;width:35px" ><span nz-icon nzType="reload" nzTheme="outline"></span></button>
+      <button nz-button [nzType]="'primary'" style="float: right;" (click)="showModal()"  ><span>新增书籍信息</span></button>
+
+      <!-- (nzOnOk)="handleOk()"用于nz-modal -->
+      <nz-modal [(nzVisible)]="isdVisible" nzTitle="书籍信息管理" [nzWidth]="1000"  class="submitmodel" (nzOnCancel)="handleCancel()" >
+        <ng-container *nzModalContent>
+          <form nz-form [formGroup]="validateForm"  (ngSubmit)="submitForm()">
+          <div nz-row [nzGutter]="[16, 6]">
+            <div nz-col class="gutter-row" [nzSpan]="8"><nz-form-item>
+              <nz-form-label nzFor="id" nzRequired>书籍ID</nz-form-label>
+              <nz-form-control nzErrorTip="未输入书籍ID" >
+                <input
+                  nz-input
+                  placeholder="请输入书籍ID"
+                  formControlName="id"
+                  id="id"
+                  
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+            <div nz-col class="gutter-row" [nzSpan]="8">
+              <nz-form-item>
+              <nz-form-label nzFor="classification" nzRequired>书籍分类名称</nz-form-label>
+              <!-- <nz-form-control nzErrorTip="未输入书籍分类名称" >
+                <input
+                  nz-input
+                  placeholder="请输入书籍分类名称"
+                  formControlName="classification"
+                  id="classification"
+                />
+              </nz-form-control> -->
+              <nz-select
+              formControlName="classification"
+              id="classification"
+     
+      (ngModelChange)="log($event)"
+      nzAllowClear
+      nzPlaceHolder="请选择分类"
+    >
+      <nz-option *ngFor="let option of optionList" [nzValue]="option.id" [nzLabel]="option.name"></nz-option>
+    </nz-select>
+
+            </nz-form-item>
+          </div>
+            <div nz-col class="gutter-row" [nzSpan]="8"><nz-form-item>
+              <nz-form-label nzFor="name" nzRequired>书籍名称</nz-form-label>
+              <nz-form-control nzErrorTip="未输入书籍名称" >
+                <input
+                  nz-input
+                  placeholder="请输入书籍名称"
+                  formControlName="name"
+                  id="name"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+            <div nz-col class="gutter-row" [nzSpan]="8"><nz-form-item>
+              <nz-form-label nzFor="author" nzRequired>作者</nz-form-label>
+              <nz-form-control nzErrorTip="未输入作者姓名" >
+                <input
+                  nz-input
+                  placeholder="请输入作者姓名"
+                  formControlName="author"
+                  id="author"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+            <div nz-col class="gutter-row" [nzSpan]="8"><nz-form-item>
+              <nz-form-label nzFor="translator" >译者</nz-form-label>
+              <nz-form-control nzErrorTip="未输入译者姓名" >
+                <input
+                  nz-input
+                  placeholder="请输入译者姓名"
+                  formControlName="translator"
+                  id="translator"
+                />
+              </nz-form-control>
+            </nz-form-item></div>
+            <div nz-col class="gutter-row" [nzSpan]="8"><nz-form-item>
+              <nz-form-label nzFor="publish_time" >出版时间</nz-form-label>
+              <nz-form-control nzErrorTip="未输入书籍出版时间" >
+                <input
+                  nz-input
+                  placeholder="请输入书籍出版时间"
+                  formControlName="publish_time"
+                  id="publish_time"
+                  type="date"
+                 
+                />
+              </nz-form-control>
+            </nz-form-item></div>
+            <div nz-col class="gutter-row" [nzSpan]="7"><nz-form-item>
+              <nz-form-label nzFor="press" >出版社</nz-form-label>
+              <nz-form-control nzErrorTip="未输入出版社" >
+                <input
+                  nz-input
+                  placeholder="请输入出版社"
+                  formControlName="press"
+                  id="press"
+                />
+              </nz-form-control>
+            </nz-form-item></div>
+            <!-- <div nz-col class="gutter-row" [nzSpan]="7"><nz-form-item>
+              <nz-form-label nzFor="code" nzRequired>书籍编号</nz-form-label>
+              <nz-form-control nzErrorTip="未输入书籍编号" >
+                <input
+                  nz-input
+                  placeholder="请输入书籍编号"
+                  formControlName="code"
+                  id="code"
+                 
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>  -->
+          <div nz-col class="gutter-row" [nzSpan]="7"><nz-form-item>
+            <nz-form-label nzFor="total_quantity" >书籍数量</nz-form-label>
+            <nz-form-control nzErrorTip="未输入书籍数量" >
+              <input
+                nz-input
+                placeholder="请输入书籍数量"
+                formControlName="total_quantity"
+                id="total_quantity"
+                type="number"
+              />
+            </nz-form-control>
+          </nz-form-item>
+        </div> 
+            <div nz-col class="gutter-row" [nzSpan]="2"> <nz-form-item>
+              <nz-form-control >
+                <button nz-button nzType="primary" [disabled]="!validateForm.valid">提交上传</button>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          </div>
+        </form>
+        </ng-container>
+      </nz-modal>
+
+      </div></div>
+      </nz-card>
+</div>
+
+<nz-table #nestedTable 
+[nzData]="listOfParentData" 
+[nzScroll]="{ y: '300px' }" 
+[nzFrontPagination]="false" 
+[nzTotal]="total" 
+[(nzPageIndex)]="curpage" 
+[nzPageSize]="pagesize" 
+[nzShowTotal]="totalTemplate" 
+  (nzPageIndexChange)="get()" 
+  (nzPageSizeChange)="get()" 
+  nzShowPagination="true" 
+  nzShowSizeChanger="true" 
+  [nzPageSizeOptions]="[5, 10, 20, 30, 50, 100]">
+  <thead>
+    <tr>
+      <th></th>
+      <th>书籍编号</th>
+      <th>书籍名称</th>
+      <th>作者</th>
+      <th>译者</th>
+      <th>书籍类型</th>
+      <th>出版社</th>
+      <th>出版时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-template ngFor let-data [ngForOf]="listOfParentData">
+      <tr >
+        <td [(nzExpand)]="data.expand"></td>
+        <td>{{ data.bookinfo.code }}</td>
+        <td>{{ data.bookinfo.name }}</td>
+        <td>{{ data.bookinfo.author }}</td>
+        <td>{{ data.bookinfo.translator }}</td>
+        <td>{{ data.bookinfo.sort[0].name }}</td>
+        <td>{{ data.bookinfo.press }}</td>
+        <td>{{ data.bookinfo.add_time | date:"yyyy-MM-dd" }}</td>
+        
+        <td>
+          <button nz-button nzType="primary"
+          nz-popconfirm
+          nzPopconfirmTitle="你确定删除这个书籍信息?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="del(data.bookinfo.id)"
+          (nzOnCancel)="cancel()"
+        >
+          删除
+        </button>
+              <nz-divider nzType="vertical"></nz-divider>
+              <button nz-button nzType="primary" (click)="changeinfoform()">修改</button>
+        </td>
+      </tr>
+      <tr [nzExpand]="data.expand">
+        <nz-table #innerTable [nzData]="data.bookinfo.book_details" nzSize="middle" [nzShowPagination]="false">
+          <thead>
+            <tr>
+              <th>书本编号</th>
+              <th>书本位置</th>
+              <th>是否在库</th>
+              <th>书本新旧情况</th>
+              <th>操作
+                <nz-divider nzType="vertical"></nz-divider>
+                <button nz-button nzType="link" (click)="showModaldetail()"><span>新增图书详情</span></button>
+
+                <nz-modal
+                [(nzVisible)]="cvisible"
+                nzTitle="Modal Title"
+                (nzOnCancel)="handleCancell()"
+                (nzOnOk)="handleOkk()"
+                [nzOkLoading]="isOkLoading"
+                [nzMaskStyle] = "{backgroundColor:'rgba(0,0,0,0.1)'}"
+              >
+                <p *nzModalContent>Modal Content</p>
+              </nz-modal>
+
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of innerTable.data">
+              
+              <td>{{ data.id }}</td>
+              <td>
+                {{ data.location1[0].cellCode }}
+              </td>
+        
+              <td>{{ data.status ===0?'在库':'已借出' }}</td>
+              <td>{{ data.if_used | mypipe}}</td>
+              <td>
+                <button nz-button nzType="primary"
+                nz-popconfirm
+                nzPopconfirmTitle="你确定删除这个书籍分类?"
+                nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="dell(data.id)"
+                (nzOnCancel)="cancel()"
+              >
+                删除
+              </button>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <button nz-button nzType="primary" >修改</button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </tr>
+    </ng-template>
+  </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total>共{{ total }}项 </ng-template>
+

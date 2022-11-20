@@ -1,0 +1,59 @@
+<nz-layout class="app-layout">
+    <nz-sider class="menu-sidebar"
+              nzCollapsible
+              nzWidth="256px"
+              nzBreakpoint="md"
+              [(nzCollapsed)]="isCollapsed"
+              [nzTrigger]="null">
+      <div class="sidebar-logo">
+       
+          <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+          <h1>图书角管理信息系统</h1>
+        
+      </div>
+      <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <li nz-submenu nzOpen nzTitle="书库" nzIcon="book">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/books">书籍分类</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/booksposition">图书位置明细</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/bookinfo">书籍信息总览</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzOpen nzTitle="表格" nzIcon="form">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a>基本表</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nz-sider>
+    <nz-layout>
+      <nz-header>
+        <div class="app-header">
+          <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+              <i class="trigger"
+                 nz-icon
+                 [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+              ></i>
+          </span>
+        </div>
+      </nz-header>
+      <nz-content>
+        <div class="inner-content">
+          <router-outlet></router-outlet>
+          
+            <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+            <div echarts [options]="chartOption" class="demo-chart"></div>
+         
+        </div>
+      </nz-content>
+    </nz-layout>
+  </nz-layout>
+  
